@@ -4,6 +4,20 @@ React-Native iOS内购模块，含缓存购买成功凭证防止丢单逻辑
 RN内购GitHub上也有很多封装好的模块，不过基本上都是国外的，包含Google的Android iap，对国内来说不需要，而且也没有丢单的处理，于是根据自己需要封装了一个，就两个文件，没必要用npm了，直接拖到Xcode中使用。
 简书地址：https://www.jianshu.com/p/71b3382455f1
 
+### 配置步骤
+对于不是ios转rn或生手可能配置都很是费力
+具体配置步骤如下：
+1、把原作者的两文件放到项目根目录即ios/项目名下
+
+2、xcode 查看到  项目名/项目名/下 出现添加的文件 
+
+    如果没有clean下 （本人是直接 右键Add files 选择添加出现)， 
+    
+    后展开项目/又编辑区选择 Build Phases 把.m 文件拖放到 Compile Sources 进行编译
+    
+3、Build Phases-> Link Binary With Libraries 添加搜索选择StoreKit.framework
+
+
 ### 一、调用API一览
 ```
 // 1.获取与服务器交互验证失败，缓存下来的漏单数组
