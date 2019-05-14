@@ -74,8 +74,7 @@
 RCT_EXPORT_MODULE()
 /**
  *  添加商品购买状态监听
- *  @params:
- *        callback 针对购买过程中，App意外退出的丢单数据的回调
+ *  @params: callback 针对购买过程中，App意外退出的丢单数据的回调
  */
 RCT_EXPORT_METHOD(addTransactionObserverWithCallback:(RCTResponseSenderBlock)callback) {
   // 监听商品购买状态变化
@@ -91,11 +90,23 @@ RCT_EXPORT_METHOD(removePurchase:(NSDictionary *)purchase) {
   if ([[NSUserDefaults standardUserDefaults] objectForKey:kIapUnverifyOrders] != nil) {
     [iapUnverifyOrdersArray addObjectsFromArray:[[NSUserDefaults standardUserDefaults] objectForKey:kIapUnverifyOrders]];
   }
-  for (NSDictionary *unverifyPurchase in iapUnverifyOrdersArray) {
-    if ([unverifyPurchase[@"transactionIdentifier"] isEqualToString:purchase[@"transactionIdentifier"]]) {
-      [iapUnverifyOrdersArray removeObject:unverifyPurchase];
+//  for (NSDictionary *unverifyPurchase in iapUnverifyOrdersArray) {
+//    if ([unverifyPurchase[@"transactionIdentifier"] isEqualToString:purchase[@"transactionIdentifier"]]) {
+//      [iapUnverifyOrdersArray removeObject:unverifyPurchase];
+//    }
+//  }
+  
+  [iapUnverifyOrdersArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    if ([obj[@"transactionIdentifier"] isEqualToString:purchase[@"transactionIdentifier"]]) {
+      *stop = YES;
+      NSDictionary *unverifyPurchase = obj;
+      if (*stop == YES) {
+        [iapUnverifyOrdersArray removeObject:unverifyPurchase];
+      }
     }
-  }
+    *stop = NO; //移除了数组中的元素之后继续执行
+  }];
+  
   [[NSUserDefaults standardUserDefaults] setObject:[iapUnverifyOrdersArray copy] forKey:kIapUnverifyOrders];
   [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -112,9 +123,7 @@ RCT_EXPORT_METHOD(removePurchase:(NSDictionary *)purchase) {
 
 /**
  *  购买某个商品
- *  @params:
- *        productIdentifier: 商品id
- *        callback： 回调，返回
+ *  @params: productIdentifier: 商品id callback： 回调，返回
  */
 RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
                   callback:(RCTResponseSenderBlock)callback)
