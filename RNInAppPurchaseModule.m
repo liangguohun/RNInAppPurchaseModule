@@ -1,4 +1,4 @@
-//
+﻿//
 //  RNInAppPurchaseModule.m
 //  zybx
 //
@@ -329,8 +329,8 @@ restoreCompletedTransactionsFailedWithError:(NSError *)error
                                 @"identifier": item.productIdentifier,
                                 @"priceString": item.priceString,
                                 @"downloadable": item.downloadable ? @"true" : @"false" ,
-                                @"description": item.localizedDescription,
-                                @"title": item.localizedTitle,
+                                //@"description": item.localizedDescription,//这两个值现在会空造成异常
+                                //@"title": item.localizedTitle,
                                 };
       [productsArrayForJS addObject:product];
     }
